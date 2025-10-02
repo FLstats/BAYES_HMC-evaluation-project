@@ -61,10 +61,10 @@ apply(X, 2, function(col) sum(is.na(col)))
 # ----------------------------------------- #
 ###           Grouping variables          ###
 # ----------------------------------------- #
-g1_levels <- sort(unique(X[, "Job"]))
-f_g1 <- factor(X[, "Job"], levels = g1_levels)
-g1_id <- as.integer(f_g1)
-N_g1 <- length(unique(g1_id))
+g_levels <- sort(unique(X[, "Job"]))
+f_g <- factor(X[, "Job"], levels = g_levels)
+g_id <- as.integer(f_g)
+N_g <- length(unique(g_id))
 
 X <- as_tibble(X) %>% select(-Job) %>% as.matrix()
 
@@ -90,10 +90,10 @@ N <- nrow(X)
 P <- ncol(X)
 
 data_list <- list(N = N, P = P,
-                  N_g1 = N_g1, g1_id = g1_id,
+                  N_g = N_g, g_id = g_id,
                   y = as.integer(y), X = X)
 
-nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.99)
+nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.80)
 
 # --------------------------------------------------- #
 #                   multilevel cp                     #
@@ -111,6 +111,7 @@ util$check_all_diagnostics(fit)
 # --------------------------------------------------- #
 #           multilevel ncp-alpha, cp-beta             #
 # --------------------------------------------------- #
+# 77 divergences
 fit <- stan(file = "stan/HLR/HLR_multilevel_ncp-alpha.stan",
             data = data_list,
             seed = 42,
@@ -124,6 +125,7 @@ util$check_all_diagnostics(fit)
 # --------------------------------------------------- #
 #           multilevel ncp-alpha, ncp-beta            #
 # --------------------------------------------------- #
+# 3 divergences
 fit <- stan(file = "stan/HLR/HLR_multilevel_ncp-alpha-beta.stan",
             data = data_list,
             seed = 42,

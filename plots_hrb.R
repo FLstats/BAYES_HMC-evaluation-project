@@ -24,7 +24,7 @@ read_model <- function(model) {
   readRDS(paste0(getwd(), "/data", "/hrb_gen_data", model, ".rds"))
 }
 
-df <- read_model(6)
+df <- read_model(1)$data
 head(df)
 
 # --------------------------------------------------- #

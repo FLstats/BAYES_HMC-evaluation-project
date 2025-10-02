@@ -37,7 +37,7 @@ ggplot2::theme_set(bayesplot::theme_default(base_family="sans", base_size=14))
 #                           SIMULATION FUNCTION                               #
 #                                                                             #
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
-data_gen_fun <- function(configs, model, stan_file) {
+data_gen_fun <- function(model, stan_file, configs) {
   
   if (model == "hrb") {
     nj <- 2
@@ -101,11 +101,16 @@ data_gen_fun <- function(configs, model, stan_file) {
     }
     sim_df <- as.data.frame(X_mat)
     
+    out <- list(
+      data = sim_df,
+      config = pars
+    )
+    
     # --------------------------------------------------- #
     #                 SAVE SIMULATED DATA                 #
     # --------------------------------------------------- #
     save_name <- paste0("data", "/", model, "_gen_data", i, ".rds")
-    saveRDS(sim_df, file = save_name)
+    saveRDS(out, file = save_name)
   }
   
   # End of function
@@ -116,13 +121,15 @@ data_gen_fun <- function(configs, model, stan_file) {
 # ----------------------------------------- #
 cnfgs_hrb <- data.frame(
   mu = c(-4, 0, 10, 1, 1, 1, 1, 1, 1),
-  a = c(0.05, 0.05, 0.05, 0.05, 0.05, 5e-3, 0.05, 0.05, 0.05),
+  a = c(0.05, 0.05, 0.05, 0.5, 0.05, 5e-3, 0.05, 0.05, 0.05),
   b = c(5, 5, 5, 5, 5, 5, 50, 0.05, 5e-4)
 )
 
-data_gen_fun(configs = cnfgs_hrb, 
-             model = "hrb", 
-             stan_file = "stan/rosenbrock/hrb_simulate-data.stan")
+data_gen_fun(model = "hrb", 
+             stan_file = "stan/rosenbrock/hrb_simulate-data.stan",
+             configs = cnfgs_hrb)
+
+# d <- readRDS(file.path(getwd(), "data", "hrb_gen_data1.rds"))
 
 # ----------------------------------------- #
 ###                 funnel                ###

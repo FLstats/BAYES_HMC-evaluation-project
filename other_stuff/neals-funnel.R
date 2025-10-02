@@ -60,7 +60,7 @@ dim(X_mat)
 head(X_mat)
 
 nf_sim_df <- as.data.frame(X_mat)
-colnames(nf_sim_df) <- c("v", paste0("x", seq(1,9,1)))
+colnames(nf_sim_df) <- c("v", paste0("x", 1:9))
 head(nf_sim_df)
 
 # --------------------------------------------------- #

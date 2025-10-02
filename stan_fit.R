@@ -45,7 +45,6 @@ fit_fun <- function(model, stan_file) {
                            full.names = TRUE)
   datasets <- lapply(data_files, readRDS)
   K <- length(datasets)
-  # K <- length(datasets)
   
   # Compile Stan program
   mod <- stan_model(stan_file)
@@ -53,7 +52,8 @@ fit_fun <- function(model, stan_file) {
   # FIT EACH DATA SET ONE AT A TIME
   for (i in seq_len(K)) {
     
-    X <- datasets[[i]]
+    X <- datasets[[i]]$data
+    cnfg <- datasets[[i]]$config
     
     if (model == "hrb") {
       N <- nrow(X)
@@ -72,9 +72,14 @@ fit_fun <- function(model, stan_file) {
     fit <- sampling(mod, data = data_list, seed = 42, iter = 2e3,
                     chains = 4, refresh = 500, control = nuts_controls)
     
-    # Save the fits
-    save_name <- paste0("fits/", model,"_fit_mod", i, ".rds")
-    saveRDS(fit, file = save_name)
+    out <- list(
+      fit = fit,
+      config = cnfg
+    )
+    
+    # Save
+    save_name <- paste0("stanfits/", model,"_fit_mod", i, ".rds")
+    saveRDS(out, file = save_name)
     
   }
   
@@ -85,8 +90,10 @@ fit_fun <- function(model, stan_file) {
 #                     RUN FUNCTION                    #
 # --------------------------------------------------- #
 fit_fun(model = "funnel", stan_file = "stan/funnel/neals_funnel.stan")
+# fit_fun(model = "hrb", stan_file = "stan/rosenbrock/hrb.stan")
 
-
+d <- readRDS(file.path(getwd(), "stanfits", "funnel_fit_mod9.rds"))
+d <- readRDS(file.path(getwd(), "stanfits", "hrb_fit_mod9.rds"))
 
 
 

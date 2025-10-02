@@ -5,8 +5,8 @@
 data {
 	int N;
 	int P;
-	int<lower=1> N_g1;								// Number of levels in covariate g1
-	array[N] int<lower=1,upper=N_g1> g1_id;			// Mapping from obs to level in g1
+	int<lower=1> N_g;								// Number of levels in covariate g
+	array[N] int<lower=1,upper=N_g> g_id;			// Mapping from obs to level in g
 	int<lower=0,upper=1> y[N];
 	matrix[N,P] X;									// (no intercept)
 }
@@ -17,16 +17,16 @@ parameters {
 	real<lower=0> tau;								// Shared slope sd	
 	
 	// Grouped intercepts
-	vector[N_g1] alpha_raw_g1;						// Auxilliary group intercept parameters
-	real mu_alpha_g1;								// Group intercept mean
-	real<lower=0> sigma_alpha_g1;					// Group intercept sd
+	vector[N_g] alpha_raw_g;						// Auxilliary group intercept parameters
+	real mu_alpha_g;								// Group intercept mean
+	real<lower=0> sigma_alpha_g;					// Group intercept sd
 }
 
 transformed parameters {
 	// NCP for grouped intercepts
-	vector[N_g1] alpha_g1	= mu_alpha_g1
-							+ alpha_raw_g1
-							* sigma_alpha_g1;
+	vector[N_g] alpha_g	= mu_alpha_g
+							+ alpha_raw_g
+							* sigma_alpha_g;
 	
 	// NCP for shared slopes
 	vector[P] beta	= beta_raw
@@ -35,13 +35,13 @@ transformed parameters {
 
 model {
 	// Log-likelihood
-	target += bernoulli_logit_lpmf(y | alpha_g1[g1_id] + X * beta);
+	target += bernoulli_logit_lpmf(y | alpha_g[g_id] + X * beta);
 	
 	// Log-priors
 	target += normal_lpdf(beta_raw | 0, 1);
 	target += student_t_lpdf(tau | 3, 0, 2.5);
 		
-	target += normal_lpdf(alpha_raw_g1 | 0, 1);
-	target += normal_lpdf(mu_alpha_g1 | 0, 10);
-	target += student_t_lpdf(sigma_alpha_g1 | 3, 0, 2.5);	
+	target += normal_lpdf(alpha_raw_g | 0, 1);
+	target += normal_lpdf(mu_alpha_g | 0, 10);
+	target += student_t_lpdf(sigma_alpha_g | 3, 0, 2.5);	
 }
