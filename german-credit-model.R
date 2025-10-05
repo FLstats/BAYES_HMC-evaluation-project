@@ -39,7 +39,7 @@ ggplot2::theme_set(bayesplot::theme_default(base_family="sans", base_size=14))
 # ----------------------------------------- #
 ###               Data prep               ###
 # ----------------------------------------- #
-dat <- read.csv(file = "data/german.csv", sep = ",", header = T)
+dat <- read.csv(file = "data/german_raw.csv", sep = ",", header = T)
 
 # Define response
 y <- dat[, length(dat)] %>% {ifelse(.=="good", 1, 0)}
@@ -53,10 +53,15 @@ cc <- complete.cases(X)
 # Build model matrix. Factors become dummies with k-1 columns 
 # (the alphabetically first level gets dropped and set as baseline).
 # The function drops NAs.
-X <- model.matrix(~ . - 1, data = X)
+# ----------------------------------------- #
+###           only main effects           ###
+# ----------------------------------------- #
+# X <- model.matrix(~ . - 1, data = X)
 
-# Check NAs in columns
-apply(X, 2, function(col) sum(is.na(col)))
+# ----------------------------------------- #
+###     and all two-way interactions      ###
+# ----------------------------------------- #
+X <- model.matrix(~ (.)^2 - 1, data = X)
 
 # ----------------------------------------- #
 ###           Grouping variables          ###
@@ -66,7 +71,8 @@ f_g <- factor(X[, "Job"], levels = g_levels)
 g_id <- as.integer(f_g)
 N_g <- length(unique(g_id))
 
-X <- as_tibble(X) %>% select(-Job) %>% as.matrix()
+# Remove all variables containing Job
+X <- as_tibble(X) %>% select(-contains("Job")) %>% as.matrix()
 
 # Remove NAs
 y <- y[cc]
@@ -93,11 +99,13 @@ data_list <- list(N = N, P = P,
                   N_g = N_g, g_id = g_id,
                   y = as.integer(y), X = X)
 
-nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.80)
+nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.99)
 
-# --------------------------------------------------- #
-#                   multilevel cp                     #
-# --------------------------------------------------- #
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+#                                                                             #
+#                             multilevel (cp)                                 #
+#                                                                             #
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 fit <- stan(file = "stan/HLR/HLR_multilevel_cp.stan",
             data = data_list,
             seed = 42,
@@ -108,10 +116,16 @@ fit <- stan(file = "stan/HLR/HLR_multilevel_cp.stan",
 
 util$check_all_diagnostics(fit)
 
-# --------------------------------------------------- #
-#           multilevel ncp-alpha, cp-beta             #
-# --------------------------------------------------- #
-# 77 divergences
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+#                                                                             #
+#                     multilevel alpha(ncp), beta(cp)                         #
+#                                                                             #
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+# P=9 --> 77 divergences
+# P=146 --> 7 divergences (a_delta = 0.80)
+# P=146 --> 1 divergences (a_delta = 0.90)
+# P=146 --> 0 divergences (a_delta = 0.99)
+# (all chains low E-FMI, BESS & TESS too low, -- for all tries)
 fit <- stan(file = "stan/HLR/HLR_multilevel_ncp-alpha.stan",
             data = data_list,
             seed = 42,
@@ -122,10 +136,17 @@ fit <- stan(file = "stan/HLR/HLR_multilevel_ncp-alpha.stan",
 
 util$check_all_diagnostics(fit)
 
-# --------------------------------------------------- #
-#           multilevel ncp-alpha, ncp-beta            #
-# --------------------------------------------------- #
-# 3 divergences
+# saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_a-ncp_b-cp_9p.rds"))
+# saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_a-ncp_b-cp_146p.rds"))
+
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+#                                                                             #
+#                     multilevel alpha(ncp), beta(ncp)                        #
+#                                                                             #
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+# P=9 --> 3 divergences
+# P=146 --> 25 divergences (a_delta = 0.80)
+# P=146 --> 1 divergences (a_delta = 0.99)
 fit <- stan(file = "stan/HLR/HLR_multilevel_ncp-alpha-beta.stan",
             data = data_list,
             seed = 42,
@@ -136,6 +157,14 @@ fit <- stan(file = "stan/HLR/HLR_multilevel_ncp-alpha-beta.stan",
 
 util$check_all_diagnostics(fit)
 
+# saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_a-ncp_b-ncp_9p.rds"))
+# saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_a-ncp_b-ncp_146p.rds"))
+
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+#                                                                             #
+#                           ***********                                       #
+#                                                                             #
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 # ----------------------------------------- #
 ###               Diagnostics             ###
 # ----------------------------------------- #

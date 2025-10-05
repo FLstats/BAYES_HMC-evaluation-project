@@ -5,16 +5,16 @@
 data {
 	int N;
 	int P;
-	int<lower=1> N_g;									// Number of levels in covariate g
-	array[N] int<lower=1,upper=N_g> g_id;				// Mapping from obs to level in g
+	int<lower=1> N_g;								// Number of levels in covariate g
+	array[N] int<lower=1,upper=N_g> g_id;			// Mapping from obs to level in g
 	int<lower=0,upper=1> y[N];
-	matrix[N,P] X;										// (no intercept)
+	matrix[N,P] X;									// (no intercept)
 }
 
 parameters {
 	// Shared slopes
-	vector[P] beta;										// Shared slope vector for all obs
-	real<lower=0> sigma2;								// Slope variance
+	vector[P] beta;									// Shared slope vector for all obs
+	real<lower=0> sigma2;							// Slope variance
 	
 	// Grouped intercepts
 	vector[N_g] alpha_raw_g;						// One intercept per level in g
