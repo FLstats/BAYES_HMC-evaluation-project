@@ -53,12 +53,12 @@ cc <- complete.cases(X)
 # ----------------------------------------- #
 ###           only main effects           ###
 # ----------------------------------------- #
-X <- model.matrix(~ . - 1, data = X)
+# X <- model.matrix(~ . - 1, data = X)
 
 # ----------------------------------------- #
 ###     and all two-way interactions      ###
 # ----------------------------------------- #
-# X <- model.matrix(~ (.)^2 - 1, data = X)
+X <- model.matrix(~ (.)^2 - 1, data = X)
 
 # ----------------------------------------- #
 ###           Grouping variables          ###
@@ -101,13 +101,31 @@ nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.80)
 
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 #                                                                             #
+#                 Fit multilevel hlr, alpha(cp), beta(cp)                     #
+#                                                                             #
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+# (a_delta = 0.80)
+# P=19 -->  div
+# P=146 --> div
+fit <- stan(file = "stan/hlr_multilevel_cp.stan",
+            data = data_list,
+            seed = 42,
+            chains = 4,
+            iter = 2e3,
+            refresh = 500,
+            control = nuts_controls)
+
+util$check_all_diagnostics(fit)
+
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+#                                                                             #
 #                 Fit multilevel hlr, alpha(ncp), beta(cp)                    #
 #                                                                             #
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 # (a_delta = 0.80)
-# P=19 --> 3 divergences
-# P=146 --> 25 divergences
-fit <- stan(file = "stan/hlr_multilevel_alpha=ncp_beta=ncp.stan",
+# P=19 --> 77 div
+# P=146 --> 7 div
+fit <- stan(file = "stan/hlr_multilevel_alpha=ncp_beta=cp.stan",
             data = data_list,
             seed = 42,
             chains = 4,

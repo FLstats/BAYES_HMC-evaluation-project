@@ -17,16 +17,19 @@ cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73",
                 "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+# ONLY P = 9
+
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 #                                                                             #
 #               3x3 GRID OF ALL X-VARIABLES FOR ONE V-VALUE                   #
 #                                                                             #
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
-read_model <- function(model_number) {
-  readRDS(paste0(getwd(), "/data", "/funnel_gen_data", model_number, ".rds"))
+read_model <- function(P, sigma_v) {
+  readRDS(paste0(getwd(), "/data/", "funnel_gen_data_","P=", P, "_", "v=",
+                 sigma_v, ".rds"))
 }
 
-df <- read_model(1)$data
+df <- read_model(9, 1)$data
 colnames(df) <- c("v", paste0("x", 1:9))
 head(df)
 
@@ -60,7 +63,7 @@ wrap_plots(plots, ncol = 3)
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 mypath <- getwd()
 data_path <- file.path(mypath, "data")
-data_files <- list.files(data_path, pattern = "funnel", full.names = TRUE)
+data_files <- list.files(data_path, pattern = "P=9_.*\\.rds$", full.names = TRUE)
 datasets <- lapply(data_files, readRDS)
 K <- length(datasets)
 

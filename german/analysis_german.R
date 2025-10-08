@@ -80,7 +80,7 @@ ggplot(betas_top, aes(x = i, y = ORmed, ymin = ORlo, ymax = ORhi)) +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank())
 
-ggsave("plots/cpplot_betas_med-or.pdf", width = 6, height = 5)
+# ggsave("plots/cpplot_betas_med-or.pdf", width = 6, height = 5)
 
 # --------------------------------------------------- #
 #         Caterpillar plot of alpha_g effects         #
@@ -125,3 +125,88 @@ marg <- eta_draws %>%
 ggplot(marg, aes(x, med, ymin = lo, ymax = hi)) +
   geom_ribbon(alpha = .15) + geom_line() +
   labs(y = "Predicted probability", x = "x_j (standardized)")
+
+
+
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+#                                                                             #
+#                               SCATTER PLOTS                                 #
+#                                                                             #
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+# store draws
+posterior_df <- as_draws_df(fit)
+posterior_array <- as_draws_array(fit)
+
+# check variables names in the array
+variables(posterior_array)
+
+# Get nuts parameters
+np <- nuts_params(fit)
+lp <- log_posterior(fit)
+
+# ----------------------------------------- #
+###             SCATTER PLOT              ###
+# ----------------------------------------- #
+color_scheme_set("darkgray")
+div_style <- scatter_style_np(div_color = "green", div_size = 2)
+
+# Set sd param on vertical axis to potentially see funnel shape.
+# Actual param and sd should be correlated.
+# Raw param and sd should ideally be uncorrelated.
+# If we see funnel shape in Raw + sd, something needs to be changed.
+mcmc_scatter(posterior_array, 
+             pars = c("alpha_g[4]", "sigma_alpha_g"), 
+             np = np,
+             transform = list(sigma_alpha_g = "log"), # more interpretable axis
+             size=1,
+             np_style = div_style)
+
+
+# ----------------------------------------- #
+###         SCATTER PLOTS COMPARE         ###
+# ----------------------------------------- #
+library(bayesplot)
+library(cowplot)
+
+# parameters to plot
+g_idx <- 1:4
+
+# create one scatter plot per group
+plots <- lapply(g_idx, function(i) {
+  mcmc_scatter(
+    posterior_array,
+    pars = c(glue("alpha_g[{i}]"), "sigma_alpha_g"),
+    np = np,
+    transform = list(sigma_alpha_g = "log"),
+    size = 1,
+    np_style = div_style
+  ) +
+    #ggtitle(glue("Group {i}")) +
+    labs(y = expression(log(sigma[alpha]))) +
+    theme(
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank()
+    )
+})
+
+# combine into 2x2 grid
+plot_grid(plotlist = plots, ncol = 2)
+
+ggsave("plots/scatter_alpha_g.pdf", width = 6, height = 5)
+# ----------------------------------------- #
+###     Histogram of log_sigma_alpha_g    ###
+# ----------------------------------------- #
+posterior_df %>%
+  mutate(log_sigma_alpha_g = log(sigma_alpha_g)) %>%
+  mcmc_hist(., pars = "log_sigma_alpha_g")
+
+
+# ----------------------------------------- #
+###               RANDOM PLOTS            ###
+# ----------------------------------------- #
+mcmc_nuts_acceptance(np, lp)
+mcmc_nuts_divergence(np, lp)
+
+
+
+
