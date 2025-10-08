@@ -53,12 +53,12 @@ cc <- complete.cases(X)
 # ----------------------------------------- #
 ###           only main effects           ###
 # ----------------------------------------- #
-# X <- model.matrix(~ . - 1, data = X)
+X <- model.matrix(~ . - 1, data = X)
 
 # ----------------------------------------- #
 ###     and all two-way interactions      ###
 # ----------------------------------------- #
-X <- model.matrix(~ (.)^2 - 1, data = X)
+# X <- model.matrix(~ (.)^2 - 1, data = X)
 
 # ----------------------------------------- #
 ###           Grouping variables          ###
@@ -96,7 +96,7 @@ data_list <- list(N = N, P = P,
                   N_g = N_g, g_id = g_id,
                   y = as.integer(y), X = X)
 
-nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.80)
+nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.99)
 
 
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
@@ -125,6 +125,10 @@ util$check_all_diagnostics(fit)
 # (a_delta = 0.80)
 # P=19 --> 77 div
 # P=146 --> 7 div
+
+# (a_delta = 0.99)
+# P=19 --> 0 div
+# P=146 --> 0 div, low EFMI
 fit <- stan(file = "stan/hlr_multilevel_alpha=ncp_beta=cp.stan",
             data = data_list,
             seed = 42,
@@ -146,6 +150,10 @@ util$check_all_diagnostics(fit)
 # (a_delta = 0.80)
 # P=19 --> 3 divergences
 # P=146 --> 25 divergences
+
+# (a_delta = 0.99)
+# P=19 --> 1 divergences
+# P=146 --> 1 divergences
 fit <- stan(file = "stan/hlr_multilevel_alpha=ncp_beta=ncp.stan",
             data = data_list,
             seed = 42,

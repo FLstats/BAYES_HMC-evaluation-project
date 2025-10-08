@@ -148,7 +148,7 @@ lp <- log_posterior(fit)
 ###             SCATTER PLOT              ###
 # ----------------------------------------- #
 color_scheme_set("darkgray")
-div_style <- scatter_style_np(div_color = "green", div_size = 2)
+div_style <- scatter_style_np(div_color = "red", div_size = 2)
 
 # Set sd param on vertical axis to potentially see funnel shape.
 # Actual param and sd should be correlated.
