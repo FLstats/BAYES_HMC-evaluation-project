@@ -1,5 +1,5 @@
 # Ignore RDS files in stan source folders
-stan/**/*.rds
+**/stan/*.rds
 
 # History files
 .Rhistory
