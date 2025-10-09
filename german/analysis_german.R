@@ -31,8 +31,11 @@ library(bayesplot)
 theme_set(theme_bw(base_family = "serif", base_size = 14))
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-fit <- readRDS(file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=ncp_beta=ncp_P=146.rds"))
+fit <- readRDS(file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=cp2_beta=cp2_P=146.rds"))
+# fit <- readRDS(file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=ncp_beta=ncp_P=146.rds"))
+
 draws <- posterior::as_draws_df(fit)
+
 
 
 # --------------------------------------------------- #
@@ -82,6 +85,9 @@ ggplot(betas_top, aes(x = i, y = ORmed, ymin = ORlo, ymax = ORhi)) +
 
 # ggsave("plots/cpplot_betas_med-or.pdf", width = 6, height = 5)
 
+### INSPECT ONE PARAMETER
+draws %>% pull("beta[3]") %>% exp() %>% median()
+
 # --------------------------------------------------- #
 #         Caterpillar plot of alpha_g effects         #
 # --------------------------------------------------- #
@@ -101,7 +107,121 @@ alpha_groups %>%
   geom_point(size = 2, color = cbbPalette[6]) +
   geom_errorbar(aes(xmin=.lower, xmax=.upper), width = 0.1) +
   labs(x = "Group-intercept effect (OR)", y = "Group")
- 
+
+
+
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+#                                                                             #
+#                               SCATTER PLOTS                                 #
+#                                                                             #
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+# store draws
+draws <- posterior::as_draws_df(fit)
+posterior_array <- as_draws_array(fit)
+
+# check variables names in the array
+variables(posterior_array)
+
+# Get nuts parameters
+np <- nuts_params(fit)
+lp <- log_posterior(fit)
+
+color_scheme_set("darkgray")
+div_style <- scatter_style_np(div_color = cbbPalette[7],
+                              div_size = 1.5)
+# ----------------------------------------- #
+###           SCATTER PLOT GRID           ###
+# ----------------------------------------- #
+library(bayesplot)
+library(cowplot)
+
+# parameters to plot
+g_idx <- 1:4
+
+# COMMON LIMITS AND BREAKS BETWEEN PLOTS
+draws %>% select(starts_with("alpha_g")) %>% unlist(use.names = F) %>% range()
+draws %>% select("sigma_alpha_g") %>% log() %>% range()
+
+xlim <- c(-2, 3)
+xbreaks <- seq(-2, 3, by=1)
+ylim <- c(-9, 2)
+ybreaks <- seq(-8, 2, by=2)
+
+# create one scatter plot per group
+plots <- lapply(g_idx, function(i) {
+  mcmc_scatter(
+    posterior_array,
+    pars = c(glue("alpha_g[{i}]"), "sigma_alpha_g"),
+    np = np,
+    transform = list(sigma_alpha_g = "log"),
+    size = 0.7,
+    np_style = div_style
+  ) +
+    labs(
+      x = bquote(alpha[g[.(i)]]),
+      y = expression(log(sigma[alpha]))
+    ) +
+    coord_cartesian(xlim = xlim, ylim = ylim) +
+    scale_x_continuous(breaks = xbreaks) +
+    scale_y_continuous(breaks = ybreaks) +
+    theme(
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank()
+    )
+})
+
+# combine into 2x2 grid (ncp)
+plot_grid(plotlist = plots, ncol = 2, align = "hv")
+
+# ggsave("plots/scatter_alpha_g_ncp.pdf", width = 6, height = 5)
+ggsave("plots/scatter_alpha_g_cp2.pdf", width = 6, height = 5)
+
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+#                                                                             #
+#                                   RHAT                                      #
+#                                                                             #
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+rhats <- rhat(fit)
+summary(rhats)
+rhats[order(rhats, decreasing = T)[1:10]] # 10 largest rhats
+rhats[rhats > 1.01]
+
+
+
+
+
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+#                                                                             #
+#                                 SLASK                                       #
+#                                                                             #
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+# ----------------------------------------- #
+###     Histogram of log_sigma_alpha_g    ###
+# ----------------------------------------- #
+posterior_df %>%
+  mutate(log_sigma_alpha_g = log(sigma_alpha_g)) %>%
+  mcmc_hist(., pars = "log_sigma_alpha_g")
+
+# ----------------------------------------- #
+###             SCATTER PLOT              ###
+# ----------------------------------------- #
+# Set sd param on vertical axis to potentially see funnel shape.
+# Actual param and sd should be correlated.
+# Raw param and sd should ideally be uncorrelated.
+# If we see funnel shape in Raw + sd, something needs to be changed.
+mcmc_scatter(posterior_array, 
+             pars = c("alpha_g[4]", "sigma_alpha_g"), 
+             np = np,
+             transform = list(sigma_alpha_g = "log"), # more interpretable axis
+             size=1,
+             np_style = div_style)
+# ----------------------------------------- #
+###               RANDOM PLOTS            ###
+# ----------------------------------------- #
+mcmc_nuts_acceptance(np, lp)
+mcmc_nuts_divergence(np, lp)
+
+
 # --------------------------------------------------- #
 #       Marginal effect for one covariate xj          #
 # --------------------------------------------------- #
@@ -125,88 +245,5 @@ marg <- eta_draws %>%
 ggplot(marg, aes(x, med, ymin = lo, ymax = hi)) +
   geom_ribbon(alpha = .15) + geom_line() +
   labs(y = "Predicted probability", x = "x_j (standardized)")
-
-
-
-#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
-#                                                                             #
-#                               SCATTER PLOTS                                 #
-#                                                                             #
-#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
-# store draws
-posterior_df <- as_draws_df(fit)
-posterior_array <- as_draws_array(fit)
-
-# check variables names in the array
-variables(posterior_array)
-
-# Get nuts parameters
-np <- nuts_params(fit)
-lp <- log_posterior(fit)
-
-# ----------------------------------------- #
-###             SCATTER PLOT              ###
-# ----------------------------------------- #
-color_scheme_set("darkgray")
-div_style <- scatter_style_np(div_color = "red", div_size = 2)
-
-# Set sd param on vertical axis to potentially see funnel shape.
-# Actual param and sd should be correlated.
-# Raw param and sd should ideally be uncorrelated.
-# If we see funnel shape in Raw + sd, something needs to be changed.
-mcmc_scatter(posterior_array, 
-             pars = c("alpha_g[4]", "sigma_alpha_g"), 
-             np = np,
-             transform = list(sigma_alpha_g = "log"), # more interpretable axis
-             size=1,
-             np_style = div_style)
-
-
-# ----------------------------------------- #
-###         SCATTER PLOTS COMPARE         ###
-# ----------------------------------------- #
-library(bayesplot)
-library(cowplot)
-
-# parameters to plot
-g_idx <- 1:4
-
-# create one scatter plot per group
-plots <- lapply(g_idx, function(i) {
-  mcmc_scatter(
-    posterior_array,
-    pars = c(glue("alpha_g[{i}]"), "sigma_alpha_g"),
-    np = np,
-    transform = list(sigma_alpha_g = "log"),
-    size = 1,
-    np_style = div_style
-  ) +
-    #ggtitle(glue("Group {i}")) +
-    labs(y = expression(log(sigma[alpha]))) +
-    theme(
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank()
-    )
-})
-
-# combine into 2x2 grid
-plot_grid(plotlist = plots, ncol = 2)
-
-ggsave("plots/scatter_alpha_g.pdf", width = 6, height = 5)
-# ----------------------------------------- #
-###     Histogram of log_sigma_alpha_g    ###
-# ----------------------------------------- #
-posterior_df %>%
-  mutate(log_sigma_alpha_g = log(sigma_alpha_g)) %>%
-  mcmc_hist(., pars = "log_sigma_alpha_g")
-
-
-# ----------------------------------------- #
-###               RANDOM PLOTS            ###
-# ----------------------------------------- #
-mcmc_nuts_acceptance(np, lp)
-mcmc_nuts_divergence(np, lp)
-
-
 
 

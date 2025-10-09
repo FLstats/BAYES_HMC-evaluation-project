@@ -57,7 +57,7 @@ fit_fun <- function(stan_file, P) {
     N <- nrow(X)
     P <- ncol(X)
     data_list <- list(N=N, P=P, X=X)
-    nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.80)
+    nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.99)
     
     fit <- sampling(mod, data = data_list, seed = 42, iter = 2e3,
                     chains = 4, refresh = 500, control = nuts_controls)

@@ -53,12 +53,12 @@ cc <- complete.cases(X)
 # ----------------------------------------- #
 ###           only main effects           ###
 # ----------------------------------------- #
-X <- model.matrix(~ . - 1, data = X)
+# X <- model.matrix(~ . - 1, data = X)
 
 # ----------------------------------------- #
 ###     and all two-way interactions      ###
 # ----------------------------------------- #
-# X <- model.matrix(~ (.)^2 - 1, data = X)
+X <- model.matrix(~ (.)^2 - 1, data = X)
 
 # ----------------------------------------- #
 ###           Grouping variables          ###
@@ -96,18 +96,17 @@ data_list <- list(N = N, P = P,
                   N_g = N_g, g_id = g_id,
                   y = as.integer(y), X = X)
 
-nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.99)
-
 
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 #                                                                             #
 #                 Fit multilevel hlr, alpha(cp), beta(cp)                     #
 #                                                                             #
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
-# (a_delta = 0.80)
-# P=19 -->  div
-# P=146 --> div
-fit <- stan(file = "stan/hlr_multilevel_cp.stan",
+nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.99)
+# cp2
+# (a_delta = 0.99)
+# P=146 --> 38 div, 4 chains low EFMI, low BESS, low TESS
+fit <- stan(file = "stan/hlr_multilevel_cp2.stan",
             data = data_list,
             seed = 42,
             chains = 4,
@@ -117,11 +116,16 @@ fit <- stan(file = "stan/hlr_multilevel_cp.stan",
 
 util$check_all_diagnostics(fit)
 
+# saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=cp_beta=cp_P=19.rds"))
+# saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=cp_beta=cp_P=146.rds"))
+saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=cp2_beta=cp2_P=146.rds"))
+
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 #                                                                             #
 #                 Fit multilevel hlr, alpha(ncp), beta(cp)                    #
 #                                                                             #
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.99)
 # (a_delta = 0.80)
 # P=19 --> 77 div
 # P=146 --> 7 div
@@ -147,6 +151,7 @@ util$check_all_diagnostics(fit)
 #                 Fit multilevel hlr, alpha(ncp), beta(ncp)                   #
 #                                                                             #
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.99)
 # (a_delta = 0.80)
 # P=19 --> 3 divergences
 # P=146 --> 25 divergences

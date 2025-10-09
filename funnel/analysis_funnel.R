@@ -49,15 +49,15 @@ calc_metrics <- function(P) {
     truth <- stanfits[[i]]$config
     params <- "sigma_v"
     
+    # RMSE
     sq_err <- sweep(draws[, params], 2, as.numeric(truth), "-")^2
-    
     rmse_point <- sqrt(colMeans(sq_err))
-    
     # Take sqrt() to get back squared errors to "error scale".
     rmse_ci <- apply(sq_err, 2, function(se) {
       quantile(sqrt(se), probs = c(0.025, 0.975))
     })
     
+    # OUTPUT LIST OF RESULTS
     results[[i]] <- list(
       rmse_point = rmse_point,
       rmse_ci = rmse_ci,
