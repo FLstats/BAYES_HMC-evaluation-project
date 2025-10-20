@@ -31,8 +31,8 @@ library(bayesplot)
 theme_set(theme_bw(base_family = "serif", base_size = 14))
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-fit <- readRDS(file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=cp2_beta=cp2_P=146.rds"))
-# fit <- readRDS(file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=ncp_beta=ncp_P=146.rds"))
+fit <- readRDS(file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=cp_beta=cp_P=146.rds"))
+fit <- readRDS(file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=ncp_beta=ncp_P=146.rds"))
 
 draws <- posterior::as_draws_df(fit)
 
@@ -139,21 +139,21 @@ library(cowplot)
 g_idx <- 1:4
 
 # COMMON LIMITS AND BREAKS BETWEEN PLOTS
-draws %>% select(starts_with("alpha_g")) %>% unlist(use.names = F) %>% range()
-draws %>% select("sigma_alpha_g") %>% log() %>% range()
+draws %>% select(starts_with("alpha_g[")) %>% unlist(use.names = F) %>% range()
+draws %>% select("sigma2_alpha_g") %>% log() %>% range()
 
-xlim <- c(-2, 3)
-xbreaks <- seq(-2, 3, by=1)
-ylim <- c(-9, 2)
-ybreaks <- seq(-8, 2, by=2)
+xlim <- c(-2.2, 2)
+xbreaks <- seq(-2, 2, by=1)
+ylim <- c(-10.1, 4.5)
+ybreaks <- seq(-10, 4, by=2)
 
 # create one scatter plot per group
 plots <- lapply(g_idx, function(i) {
   mcmc_scatter(
     posterior_array,
-    pars = c(glue("alpha_g[{i}]"), "sigma_alpha_g"),
+    pars = c(glue("alpha_g[{i}]"), "sigma2_alpha_g"),
     np = np,
-    transform = list(sigma_alpha_g = "log"),
+    transform = list(sigma2_alpha_g = "log"),
     size = 0.7,
     np_style = div_style
   ) +
@@ -163,7 +163,7 @@ plots <- lapply(g_idx, function(i) {
       # x = bquote(alpha[g[.(as.character(i))]]),
       # x = bquote(alpha * plain("_g[")(.(i)) * plain("]")),
       x = bquote(alpha[.(i)]),
-      y = expression(log(sigma[alpha]))
+      y = expression(log(sigma[alpha]^2))
     ) +
     coord_cartesian(xlim = xlim, ylim = ylim) +
     scale_x_continuous(breaks = xbreaks) +
@@ -178,7 +178,7 @@ plots <- lapply(g_idx, function(i) {
 plot_grid(plotlist = plots, ncol = 2, align = "hv")
 
 # ggsave("plots/scatter_alpha_g_ncp.pdf", width = 6, height = 5)
-ggsave("plots/scatter_alpha_g_cp2.pdf", width = 6, height = 5)
+ggsave("plots/scatter_alpha_g_cp.pdf", width = 6, height = 5)
 
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 #                                                                             #

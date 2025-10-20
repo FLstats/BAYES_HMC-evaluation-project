@@ -3,38 +3,28 @@ data {
   int P;
   int<lower=1> N_g;  // Number of levels in covariate g
   array[N] int<lower=1,upper=N_g> g_id;  // Mapping from obs to level in g
-  int<lower=0,upper=1> y[N];
+  array[N] int<lower=0,upper=1> y;
   matrix[N,P] X;
 }
 
 parameters {
-  vector[P] beta;  // Shared slope vector for all obs
+  // Shared slope vector for all obs
+  vector[P] beta;
+  real<lower=0> sigma2_beta;
 
+  // Group intercepts
   vector[N_g] alpha_g;
-  real mu_alpha_g;
-  real<lower=0> sigma_alpha_g;
-
-  real<lower=0> sigma2;
-}
-
-transformed parameters {
-  vector[N] alpha_obs;  // Every obs mapped to its intercept level
-  for(n in 1:N) {
-    alpha_obs[n] = alpha_g[g_id[n]];
-  }
+  real<lower=0> sigma2_alpha_g;
 }
 
 model {
   // Log-likelihood
-  target += bernoulli_logit_lpmf(y | alpha_obs + X * beta);
+  target += bernoulli_logit_lpmf(y | alpha_g[g_id] + X * beta);
 
   // Log-priors
-  target += student_t_lpdf(beta | 3, 0, sqrt(sigma2));
+  target += normal_lpdf(beta | 0, sqrt(sigma2_beta));
+  target += exponential_lpdf(sigma2_beta | 0.01);
 	
-  target += normal_lpdf(alpha_g | mu_alpha_g, sigma_alpha_g);
-  target += normal_lpdf(mu_alpha_g | 0, 10);
-  target += student_t_lpdf(sigma_alpha_g | 3, 0, 2.5);
-
-  // Hyperprior
-  target += exponential_lpdf(sigma2 | 0.01);
+  target += normal_lpdf(alpha_g | 0, sqrt(sigma2_alpha_g));
+  target += exponential_lpdf(sigma2_alpha_g | 0.01);
 }

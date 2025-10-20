@@ -103,10 +103,10 @@ data_list <- list(N = N, P = P,
 #                                                                             #
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.99)
-# cp2
+# cp
 # (a_delta = 0.99)
-# P=146 --> 38 div, 4 chains low EFMI, low BESS, low TESS
-fit <- stan(file = "stan/hlr_multilevel_cp2.stan",
+# P=146 --> 73 div, 4 chains low EFMI, low bESS
+fit <- stan(file = "stan/hlr_multilevel_cp.stan",
             data = data_list,
             seed = 42,
             chains = 4,
@@ -117,34 +117,34 @@ fit <- stan(file = "stan/hlr_multilevel_cp2.stan",
 util$check_all_diagnostics(fit)
 
 # saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=cp_beta=cp_P=19.rds"))
-# saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=cp_beta=cp_P=146.rds"))
-saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=cp2_beta=cp2_P=146.rds"))
+saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=cp_beta=cp_P=146.rds"))
 
-#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
-#                                                                             #
-#                 Fit multilevel hlr, alpha(ncp), beta(cp)                    #
-#                                                                             #
-#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
-nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.99)
-# (a_delta = 0.80)
-# P=19 --> 77 div
-# P=146 --> 7 div
 
-# (a_delta = 0.99)
-# P=19 --> 0 div
-# P=146 --> 0 div, low EFMI
-fit <- stan(file = "stan/hlr_multilevel_alpha=ncp_beta=cp.stan",
-            data = data_list,
-            seed = 42,
-            chains = 4,
-            iter = 2e3,
-            refresh = 500,
-            control = nuts_controls)
-
-util$check_all_diagnostics(fit)
-
-# saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=ncp_beta=cp_P=19.rds"))
-# saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=ncp_beta=cp_P=146.rds"))
+# #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+# #                                                                             #
+# #                 Fit multilevel hlr, alpha(ncp), beta(cp)                    #
+# #                                                                             #
+# #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+# nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.99)
+# # (a_delta = 0.80)
+# # P=19 --> 77 div
+# # P=146 --> 7 div
+# 
+# # (a_delta = 0.99)
+# # P=19 --> 0 div
+# # P=146 --> 0 div, low EFMI
+# fit <- stan(file = "stan/hlr_multilevel_alpha=ncp_beta=cp.stan",
+#             data = data_list,
+#             seed = 42,
+#             chains = 4,
+#             iter = 2e3,
+#             refresh = 500,
+#             control = nuts_controls)
+# 
+# util$check_all_diagnostics(fit)
+# 
+# # saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=ncp_beta=cp_P=19.rds"))
+# # saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=ncp_beta=cp_P=146.rds"))
 
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 #                                                                             #
@@ -153,11 +153,9 @@ util$check_all_diagnostics(fit)
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 nuts_controls <- list(max_treedepth = 10, adapt_delta = 0.99)
 # (a_delta = 0.80)
-# P=19 --> 3 divergences
-# P=146 --> 25 divergences
+# P=146 --> 9 divergences
 
 # (a_delta = 0.99)
-# P=19 --> 1 divergences
 # P=146 --> 1 divergences
 fit <- stan(file = "stan/hlr_multilevel_alpha=ncp_beta=ncp.stan",
             data = data_list,
@@ -170,7 +168,7 @@ fit <- stan(file = "stan/hlr_multilevel_alpha=ncp_beta=ncp.stan",
 util$check_all_diagnostics(fit)
 
 # saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=ncp_beta=ncp_P=19.rds"))
-# saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=ncp_beta=ncp_P=146.rds"))
+saveRDS(fit, file.path(getwd(), "stanfits", "hlr_fit_mlvl_alpha=ncp_beta=ncp_P=146.rds"))
 
 
 
