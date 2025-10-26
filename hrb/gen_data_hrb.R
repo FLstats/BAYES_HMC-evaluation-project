@@ -112,5 +112,7 @@ data_gen_fun(stan_file = "stan/simulate-data_hrb.stan",
              configs = cnfgs)
 
 
-
+###
+d <- read_rds(file.path(getwd(), "data", "hrb_gen_data_nj=2_ni=3_set2.rds"))
+d$data
 

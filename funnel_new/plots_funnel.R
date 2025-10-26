@@ -16,14 +16,93 @@ filter <- dplyr::filter
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73",
                 "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# --------------------------------------------------- #
+#                   2d funnel plot                    #
+# --------------------------------------------------- #
+set.seed(0)
+S <- 1e4
+v <- rnorm(S, 0, 3)
+x1 <- rnorm(S, 0, sqrt(exp(v)))
+x2 <- rnorm(S, 0, sqrt(exp(v)))
 
-# ONLY P = 9
+df <- data.frame(
+  v = v,
+  x1 = x1,
+  x2 = x2
+)
+
+# Funnel plot
+plot_funnel <- function(xi, idx) {
+  ggplot(data = df) +
+    geom_point(aes(x=xi, y=v), color = "#320000cc") +
+    labs(x=bquote(x[.(idx)]),
+         y=expression(nu)) +
+    theme(
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      axis.title.x = element_text(size = 16),
+      axis.title.y = element_text(size = 16),
+      axis.text = element_text(size = 10),
+    )  
+}
+
+plot_funnel(x1, 1)
+
+
+# # Remove outliers if needed
+# range(v)
+# range(x1)
+# which(x1 == min(x1))
+# df <- df[-which(x1 == min(x1)), ]
+
+# --------------------------------------------------- #
+#                   3d funnel plot                    #
+# --------------------------------------------------- #
+library(plotly)
+
+plot_ly(
+  data = df,
+  x = ~x1, y = ~x2, z = ~v,
+  type = "scatter3d",
+  mode = "markers",
+  marker = list(
+    size=4,
+    opacity=0.55,
+    color = "rgba(50, 0, 0, 0.8)"
+  )
+) %>%
+  layout(
+    scene = list(
+      xaxis = list(
+        title = list(
+        text = "x\u2081",
+        font = list(size = 20, family = "Arial", color = "black")
+        )
+      ),
+      yaxis = list(
+        title = list(
+          text = "x\u2082",
+          font = list(size = 20, family = "Arial", color = "black")
+          )
+      ),
+      zaxis = list(
+        title = list(
+          text = "\u03BD",
+          font = list(size = 20, family = "Arial", color = "black")
+          )
+      )
+    )
+  )
 
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 #                                                                             #
-#               3x3 GRID OF ALL X-VARIABLES FOR ONE V-VALUE                   #
+#                                 SLASK                                       #
 #                                                                             #
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+
+# --------------------------------------------------- #
+#    3x3 GRID OF ALL X-VARIABLES FOR ONE V-VALUE      #
+# --------------------------------------------------- #
 read_model <- function(P, sigma_v) {
   readRDS(paste0(getwd(), "/data/", "funnel_gen_data_","P=", P, "_", "v=",
                  sigma_v, ".rds"))
@@ -33,9 +112,7 @@ df <- read_model(9, 1)$data
 colnames(df) <- c("v", paste0("x", 1:9))
 head(df)
 
-# --------------------------------------------------- #
-#               GRID OF SCATTER PLOTS                 #
-# --------------------------------------------------- #
+
 plots <- lapply(paste0("x", 1:9), function(xi) {
   ggplot(df, aes(x = .data[[xi]], y = v)) +
     geom_point(alpha = 0.3, size = 0.6) +
@@ -56,11 +133,9 @@ plots <- lapply(paste0("x", 1:9), function(xi) {
 
 wrap_plots(plots, ncol = 3)
 
-#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
-#                                                                             #
-#               3x3 GRID OF ONE X-VARIABLE FOR ALL V-VALUES                   #
-#                                                                             #
-#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+# --------------------------------------------------- #
+#     3x3 GRID OF ONE X-VARIABLE FOR ALL V-VALUES     #
+# --------------------------------------------------- #
 mypath <- getwd()
 data_path <- file.path(mypath, "data")
 data_files <- list.files(data_path, pattern = "funnel_gen_data.*\\.rds$", full.names = TRUE)
