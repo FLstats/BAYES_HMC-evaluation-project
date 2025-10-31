@@ -138,8 +138,13 @@ ggsave("plots/rmse_errorbar.pdf", width = 6, height = 5)
 #                           ***********                                       #
 #                                                                             #
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+d3 <- readRDS(file.path(getwd(), "data", "funnel_gen_data_P=3.rds"))
+d9 <- readRDS(file.path(getwd(), "data", "funnel_gen_data_P=9.rds"))
+d200 <- readRDS(file.path(getwd(), "data", "funnel_gen_data_P=200.rds"))
+d100 <- readRDS(file.path(getwd(), "data", "funnel_gen_data_P=100.rds"))
 
 
+dfit3 <- readRDS(file.path(getwd(), "stanfits", "funnel_fit_P=9.rds"))
 
 
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
