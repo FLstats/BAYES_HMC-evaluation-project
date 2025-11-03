@@ -1,0 +1,113 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0" version="28.2.8" pages="3">
+  <diagram name="Page-1" id="RqW224-l8NeOC77w0xGY">
+    <mxGraphModel dx="1665" dy="751" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="hIloqacCAPpWjtw34nsh-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="hIloqacCAPpWjtw34nsh-2" target="hIloqacCAPpWjtw34nsh-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hIloqacCAPpWjtw34nsh-2" value="&lt;div&gt;x_1&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="340" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="hIloqacCAPpWjtw34nsh-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="hIloqacCAPpWjtw34nsh-4" target="hIloqacCAPpWjtw34nsh-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hIloqacCAPpWjtw34nsh-4" value="x_1,2" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="310" y="200" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="hIloqacCAPpWjtw34nsh-5" value="x_1,3" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="200" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="hIloqacCAPpWjtw34nsh-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="hIloqacCAPpWjtw34nsh-7" target="hIloqacCAPpWjtw34nsh-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hIloqacCAPpWjtw34nsh-7" value="&lt;div&gt;x_2,2&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="310" y="340" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="hIloqacCAPpWjtw34nsh-8" value="&lt;div&gt;x_2,3&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="340" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="hIloqacCAPpWjtw34nsh-9" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="hIloqacCAPpWjtw34nsh-2" target="hIloqacCAPpWjtw34nsh-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="410" as="sourcePoint" />
+            <mxPoint x="450" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hIloqacCAPpWjtw34nsh-10" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="hIloqacCAPpWjtw34nsh-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="250" y="370" as="sourcePoint" />
+            <mxPoint x="310" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hIloqacCAPpWjtw34nsh-11" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="hIloqacCAPpWjtw34nsh-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="380" as="sourcePoint" />
+            <mxPoint x="680" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hIloqacCAPpWjtw34nsh-12" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="630" y="379.5" as="sourcePoint" />
+            <mxPoint x="680" y="379.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hIloqacCAPpWjtw34nsh-13" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;. . .&lt;/b&gt;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="310" y="500" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hIloqacCAPpWjtw34nsh-14" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;. . .&lt;/b&gt;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="680" y="220" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hIloqacCAPpWjtw34nsh-15" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;. . .&lt;/b&gt;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="680" y="360" width="60" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="hUZQZtT__3967QHJSgdd" name="Page-2">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="BzwF48qikeWw0qyb5cK4-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="BzwF48qikeWw0qyb5cK4-2" target="BzwF48qikeWw0qyb5cK4-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BzwF48qikeWw0qyb5cK4-2" value="&lt;div&gt;Generate data (X) using true&amp;nbsp;θ&amp;nbsp;values&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CCFFCC;" vertex="1" parent="1">
+          <mxGeometry x="270" y="190" width="310" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="BzwF48qikeWw0qyb5cK4-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="BzwF48qikeWw0qyb5cK4-4" target="BzwF48qikeWw0qyb5cK4-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BzwF48qikeWw0qyb5cK4-4" value="&lt;div&gt;Sample parameters&amp;nbsp;θ&amp;nbsp;using HMC, and X as input&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CCFFFF;" vertex="1" parent="1">
+          <mxGeometry x="270" y="310" width="310" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="BzwF48qikeWw0qyb5cK4-5" value="Evaluate HMC sampling performance, and compare (sampled&amp;nbsp;θ) to (true&amp;nbsp;θ)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CCFFCC;" vertex="1" parent="1">
+          <mxGeometry x="270" y="430" width="310" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="Yzxgzls2afvVA7pij3pr" name="Page-3">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="fKWOg7nlXHnCD3iwxXJm-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="fKWOg7nlXHnCD3iwxXJm-2" target="fKWOg7nlXHnCD3iwxXJm-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fKWOg7nlXHnCD3iwxXJm-2" value="Use ready data X" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CCFFFF;" vertex="1" parent="1">
+          <mxGeometry x="270" y="240" width="310" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="fKWOg7nlXHnCD3iwxXJm-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="fKWOg7nlXHnCD3iwxXJm-4" target="fKWOg7nlXHnCD3iwxXJm-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fKWOg7nlXHnCD3iwxXJm-4" value="&lt;div&gt;Sample parameters&amp;nbsp;θ&amp;nbsp;using HMC, and X as input&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CCFFFF;" vertex="1" parent="1">
+          <mxGeometry x="270" y="360" width="310" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="fKWOg7nlXHnCD3iwxXJm-5" value="Evaluate HMC sampling performance, and analyse sampled&amp;nbsp;θ" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#CCFFFF;" vertex="1" parent="1">
+          <mxGeometry x="270" y="480" width="310" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -81,7 +81,11 @@ ggplot(betas_top, aes(x = i, y = ORmed, ymin = ORlo, ymax = ORhi)) +
   labs(x = "Beta coefficient index",
        y = "Median odds ratio") +
   theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank())
+        panel.grid.minor = element_blank(),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text = element_text(size = 12)
+        )
 
 ggsave("plots/cpplot_betas_med-or.pdf", width = 6, height = 5)
 
@@ -170,15 +174,18 @@ plots <- lapply(g_idx, function(i) {
     scale_y_continuous(breaks = ybreaks) +
     theme(
       panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank()
+      panel.grid.minor = element_blank(),
+      axis.title.x = element_text(size = 16),
+      axis.title.y = element_text(size = 16),
+      axis.text = element_text(size = 12)
     )
 })
 
 # combine into 2x2 grid (ncp)
 plot_grid(plotlist = plots, ncol = 2, align = "hv")
 
-# ggsave("plots/scatter_alpha_g_ncp.pdf", width = 6, height = 5)
-ggsave("plots/scatter_alpha_g_cp.pdf", width = 6, height = 5)
+ggsave("plots/scatter_alpha_g_ncp.pdf", width = 6, height = 5)
+# ggsave("plots/scatter_alpha_g_cp.pdf", width = 6, height = 5)
 
 #### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
 #                                                                             #

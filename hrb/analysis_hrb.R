@@ -154,6 +154,25 @@ ggplot(data = plot_df_mu, aes(x = rmse_point, y = set)) +
     panel.grid.minor = element_blank()
   )
 
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+#                                                                             #
+#                           ***********                                       #
+#                                                                             #
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+rhats <- lapply(metrics, function(x) x$rhats)
+imap(rhats, ~ enframe(.x, name = "parameter", value = "rhat") %>%
+       mutate(dataset = .y)) %>%
+  bind_rows() %>%
+  arrange(desc(rhat)) %>%
+  mutate(rhat = format(rhat, digits = 3)) %>%
+  print(n = Inf)
+
+
+
+
+
+
+
 
 
 
