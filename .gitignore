@@ -1,4 +1,7 @@
-# Ignore RDS files in stan source folders
+# Ignore misc folder and everything in it
+misc/
+
+# Ignore RDS files in any folder names "stan" at any depth
 **/stan/*.rds
 
 # History files
