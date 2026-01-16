@@ -1,6 +1,7 @@
 # Ignore folders and everything in them
 misc/
 presentation/
+articles/
 
 # Ignore RDS files in any folder names "stan" at any depth
 **/stan/*.rds
